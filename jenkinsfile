@@ -3,14 +3,14 @@ pipeline{
     stages{
         stage('Pre Build Actions'){
             steps{
-                    sh npm install
+                    sh 'npm install'
                     sh 'sudo systemctl status ngnix || sudo apt instal ngnix -y'
                     sh 'sudo systemctl start ngnix'
             }
         }
         stage('Build'){
             steps{
-                    sh npm run build
+                    sh 'npm run build'
             }
         }
         stage('Post Build Actions'){
