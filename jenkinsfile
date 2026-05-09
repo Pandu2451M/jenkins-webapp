@@ -16,7 +16,6 @@ pipeline{
         stage('Post Build Actions'){
             steps{
                     sh 'echo "Build Completed Successfully"'
-                    sh 'echo "Done"'
                     sh 'sudo cp -r dist/* /var/www/html/'
                     sh 'sudo systemctl restart ngnix'
             }
