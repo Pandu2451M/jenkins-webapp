@@ -4,8 +4,8 @@ pipeline{
         stage('Pre Build Actions'){
             steps{
                     sh 'npm install'
-                    sh 'sudo systemctl status ngnix || sudo apt instal ngnix -y'
-                    sh 'sudo systemctl start ngnix'
+                    sh 'sudo systemctl status nginx || sudo apt instal nginx -y'
+                    sh 'sudo systemctl start nginx'
             }
         }
         stage('Build'){
@@ -17,7 +17,7 @@ pipeline{
             steps{
                     sh 'echo "Build Completed Successfully"'
                     sh 'sudo cp -r dist/* /var/www/html/'
-                    sh 'sudo systemctl restart ngnix'
+                    sh 'sudo systemctl restart nginx'
             }
         }
     }
