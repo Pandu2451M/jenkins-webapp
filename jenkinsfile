@@ -1,43 +1,43 @@
-pipeline{
+pipeline {
     agent any
     environment {
-            IMAGE_NAME = "pandu245/frontend"
-            IMAGE_TAG  = "${BUILD_NUMBER}"
-            APP_SERVER = "16.170.243.86"
+        IMAGE_NAME = "pandu245/frontend"
+        IMAGE_TAG  = "${BUILD_NUMBER}"
+        APP_SERVER = "16.170.243.86"
     }
-    stages{
-        stage('Checkout'){
-            steps{
-                    git branch: 'main',
-                    url: 'https://github.com/Pandu2451M/jenkins-webapp.git'
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main',
+                url: 'https://github.com/Pandu2451M/jenkins-webapp.git'
             }
         }
-        stage('Build Docker Image'){
-            steps{
+        stage('Build Docker Image') {
+            steps {
+                sh '''
+                docker build -f docker/dockerfile -t $IMAGE_NAME:$IMAGE_TAG .
+                '''
+            }
+        }
+        stage('Docker Login') {
+            steps {
+                withCredentials([
+                    usernamePassword(
+                        credentialsId: 'dockerCred',
+                        usernameVariable: 'DOCKER_USER',
+                        passwordVariable: 'DOCKER_PASS'
+                    )
+                ]) {
                     sh '''
-                    docker build -f docker/dockerfile -t $IMAGE_NAME:$IMAGE_TAG .
+                    echo $DOCKER_PASS | docker login \
+                    -u $DOCKER_USER \
+                    --password-stdin
                     '''
+                }
             }
         }
-        stage('Docker Login'){
-            steps{
-                    withCredentials([
-                        usernamePassword(
-                            credentialsID: 'dockerCred',
-                            usernamevariable: 'DOCKER_USER',
-                            passwordVariables: 'DOCKER_PASS'
-                        )
-                    ])  {
-                        sh '''
-                        echo $DOCKER_PASS | docker login \
-                        -u $DOCKER_USER \
-                        --password-stdin
-                        '''
-                    }
-                }
-        }                                   
-        stage('Push Image'){
-            steps{
+        stage('Push Image') {
+            steps {
                 sh '''
                 docker push $IMAGE_NAME:$IMAGE_TAG
                 docker tag \
@@ -47,13 +47,13 @@ pipeline{
                 '''
             }
         }
-        stage('Deploy To App Server'){
-            steps{
+        stage('Deploy To App Server') {
+            steps {
                 sh """
                 ssh ubuntu@$APP_SERVER '
                 docker pull $IMAGE_NAME:latest
-                docker stop frontend || true 
-                docker rm frontend || true 
+                docker stop frontend || true
+                docker rm frontend || true
                 docker run -d \
                 --name frontend \
                 -p 80:80 \
@@ -65,7 +65,7 @@ pipeline{
     }
     post {
         success {
-            echo "Deployment Sucessful"
+            echo "Deployment Successful"
         }
         failure {
             echo "Deployment Failed"
