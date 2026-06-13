@@ -2,7 +2,7 @@ pipeline{
     agent any
     environment {
             IMAGE_NAME = "pandu245/frontend"
-            IMAGE_TAG  = "${BUILD-NUMBER}"
+            IMAGE_TAG  = "${BUILD_NUMBER}"
             APP_SERVER = "16.170.243.86"
     }
     stages{
