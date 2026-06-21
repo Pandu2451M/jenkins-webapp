@@ -1,8 +1,8 @@
-pipeline {
+pipeline{
     agent any
-    
-        stage('Deployment') {
-            steps {
+    stages{
+        stage('Deployment'){
+            steps{
                 sh """
                 scp docker-compose.yaml ubuntu@13.60.190.190:/home/ubuntu/
                 ssh ubuntu@13.60.190.190 '''
@@ -14,3 +14,4 @@ pipeline {
             }
         }
     }
+}
