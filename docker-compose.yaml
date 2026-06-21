@@ -13,7 +13,7 @@ services:
       - mysql-data:/var/lib/mysql
       
   backend:
-    image: backend:v1
+    image: pandu245/backend:v1
     container_name: backend
     restart: always
     depends_on:
@@ -22,7 +22,7 @@ services:
       - "8080:8080"
 
   frontend:
-    image: frontend:v1
+    image: pandu245/frontend:v1
     container_name: frontend
     restart: always 
     depends_on: 
