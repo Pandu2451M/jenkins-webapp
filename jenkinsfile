@@ -1,7 +1,7 @@
 pipeline{
     agent any
     environment{
-        AWS_REGION = 'ap-south-1'
+        AWS_REGION = 'eu-north-1'
         ACCOUNT_ID = '010928219854'
         REPOSITORY = 'frontend'
         IMAGE_TAG = '${BUILD_NUMBER}'
@@ -34,7 +34,7 @@ pipeline{
                 export AWS_DEFAULT_REGION=${AWS_REGION}
 
                 aws sts get-caller-identity
-                
+
                 aws ecr get-login-password \
                 --region ${AWS_REGION} | docker login \
                 --username AWS \
